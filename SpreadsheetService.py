@@ -1,14 +1,13 @@
+from utils import Message
 import requests
-from requests.api import post
 
 
 class SpreadsheetService:
     spreadsheetScriptAPI = ""
+    message = Message()
 
     def __init__(self, spreadsheetScriptAPI):
         self.spreadsheetScriptAPI = spreadsheetScriptAPI
-
-    cache = {}
 
     def checkUltah(self, delta=None):
         postData = dict()
@@ -23,9 +22,6 @@ class SpreadsheetService:
             return result
         except:
             return None
-
-    def clearCache(self):
-        self.cache = {}
 
     def getData(self, nim: int):
         postData = dict()
@@ -44,6 +40,8 @@ class SpreadsheetService:
 
     def reply(self, delta=None):
         orang = self.checkUltah(delta)
+        if (len(orang["Result"]) == 0):
+            return ("Text", [self.message.NoBirthday()])
         text = "Ulang tahun " + orang["Date"] + "\n"
         i = 0
         for o in orang["Result"]:
@@ -51,16 +49,12 @@ class SpreadsheetService:
                 text += "\n"
             text += "{} - {}".format(o["NIM"], o["Nama"])
             i += 1
-        return ("ReplyText", text)
+        return ("Text", [text])
 
     def getPhoto(self, nim: int):
-        if (nim in self.cache.keys()):
-            data = self.cache[nim]
-            return ("UnprocessedImage", [data['Foto'], data['NIM'], data['Nama']])
         data = self.getData(nim)
         if (data == None):
             return ("ReplyText", "Something went wrong")
         if (len(data.keys()) == 0):
-            return ("ReplyText", "NIM gak ketemu coi")
-        self.cache[nim] = data
+            return ("ReplyText", self.message.NIMNotFound(nim))
         return ("UnprocessedImage", [data['Foto'], data['NIM'], data['Nama']])

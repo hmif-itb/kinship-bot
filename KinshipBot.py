@@ -3,7 +3,7 @@ from SpreadsheetService import SpreadsheetService
 from MemeService import MemeService
 from linebot.models.send_messages import TextSendMessage, ImageSendMessage
 from ImageService import ImageService
-from utils import text_contains
+from utils import Message, text_contains
 import time
 import random
 import os
@@ -20,6 +20,7 @@ class KinshipBot:
     memeService = None
     spreadsheetService = None
     Config = dict()
+    message = Message()
 
     def __init__(self):
         print(sys.argv)
@@ -39,7 +40,6 @@ class KinshipBot:
         self.memeService = MemeService()
         self.spreadsheetService = SpreadsheetService(
             self.Config['SPREADSHEET_SCRIPT_API'])
-        print(self.Config)
 
     def setLineBot(self, lineBot: LineBotApi):
         self.lineBotService = lineBot
@@ -51,18 +51,17 @@ class KinshipBot:
             foundNumber = False
             for i in range(10, 0, -1):
                 if (str(i) in msg):
-                    self.reply(event, ("Text", ["Nih gue kasih " +
-                                                str(i) + " meme, sabar yak, dicari duls"]))
+                    self.reply(event, ("Text", [self.message.MemeWait(i)]))
                     payload = self.memeService.reply(i)
                     foundNumber = True
                     break
             if not(foundNumber):
-                self.reply(event, ("Text", ["Bentar yak, nyari meme duls"]))
+                self.reply(event, ("Text", [self.message.MemeWait()]))
                 payload = self.memeService.reply()
         elif text_contains(msg, ['hai', 'bot'], series=True, max_len=150):
-            self.reply(event, ("ReplyText", "halo juga"))
+            self.reply(event, ("ReplyText", self.message.Hai()))
         elif text_contains(msg, ['siapa', 'jodoh'], series=True, max_len=150):
-            self.reply(event, ("ReplyText", "kotsar"))
+            self.reply(event, ("ReplyText", self.message.NamaOrang()))
         elif text_contains(msg, ['bagi', 'jokes', 'bapak'], series=True, max_len=150):
             self.reply(
                 event, ("Image", ["https://jokesbapak2.herokuapp.com/v1/id/" + str(random.randint(1, 154))]))
@@ -73,7 +72,7 @@ class KinshipBot:
                 if (idx+1 <= len(splitMsg)-1):
                     nim = int(splitMsg[idx+1])
                     self.reply(
-                        event, ("Text", ["Bentar lagi diedit foto nim " + str(nim)]))
+                        event, ("Text", [self.message.EditWait(nim)]))
                     payload = self.spreadsheetService.getPhoto(nim)
             except ValueError:
                 payload = ("Nothing",)
@@ -161,4 +160,4 @@ class KinshipBot:
             if (sourceId != "" and len(sendItem) != 0):
                 for msgQueue in sendItem:
                     self.lineBotService.push_message(sourceId, msgQueue)
-                    time.sleep(0.5)
+                    time.sleep(0.75)
