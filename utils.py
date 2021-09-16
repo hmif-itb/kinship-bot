@@ -27,6 +27,25 @@ class Message:
             return "Failed to get message"
         return messages[randint(0, len(messages)-1)]
 
+    def YesOrNo(self):
+        messages = [
+            'yes',
+            'no',
+            'ya',
+            'gak',
+            'iya',
+            'tentatif',
+            'belum tentu',
+            'mungkin',
+            'tidak',
+            'yep',
+            'tidak mungkin',
+            'tidak bisa dipungkiri',
+            'pastilah',
+            'gak yakin'
+        ]
+        return messages[randint(0, len(messages)-1)]
+
     def NoBirthday(self):
         messages = [
             'Gak ada yang ultah',

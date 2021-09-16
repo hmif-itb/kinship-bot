@@ -46,10 +46,10 @@ class KinshipBot:
     def handleMessage(self, event, msg: str):
         payload = ("Nothing",)
         msg = msg.lower()
-        if (not('bot' in msg)):
+        if (not('bot' in msg) or 'http' in msg or 'https' in msg):
             return
         if ('help' in msg):
-            payload = ("ReplyText", "Apa yang bisa dibantu?\nFoto: 'bot bagi foto nim xxx' atau 'bagi foto nim xxx dong bot'\n\nCek ultah: 'bot, siapa yang ultah hari ini?'\nSupported keyword: hari ini, besok, kemarin, lusa, lusa kemarin, x hari lagi, x hari lalu, minggu depan, minggu lalu\n\nSearch by nama panggilan: 'bot, bagi data dengan nama xxx' atau 'bagi data dengan nama xxx dong bot'\n\nKalau mau meme: 'bot, bagi meme dong' atau 'bagi meme ya bot'\n\nKalau mau dad jokes: 'bot, bagi jokes bapak2' atau 'bagi jokes bapak bapak dong bot'\n\nHal-hal umum seperti: 'hai bot', 'gws bot', 'thank you bot' juga akan gue balas\n\nKalau mau tau cari jodoh: 'bot siapa jodoh gue?' atau 'siapa jodoh kosar bot?'")
+            payload = ("ReplyText", "Apa yang bisa dibantu?\nFoto: 'bot bagi foto nim xxx' atau 'bagi foto nim xxx dong bot'\n\nCek ultah: 'bot, siapa yang ultah hari ini?'\nSupported keyword: hari ini, besok, kemarin, lusa, lusa kemarin, x hari lagi, x hari lalu, minggu depan, minggu lalu\n\nSearch by nama panggilan: 'bot, bagi data dengan nama xxx' atau 'bagi data dengan nama xxx dong bot'\n\nKalau mau meme: 'bot, bagi meme dong' atau 'bagi meme ya bot'\n\nKalau mau dad jokes: 'bot, bagi jokes bapak2' atau 'bagi jokes bapak bapak dong bot'\n\nHal-hal umum seperti: 'hai bot', 'gws bot', 'thank you bot' juga akan gue balas\n\nKalau mau tau cari jodoh: 'bot siapa jodoh gue?' atau 'siapa jodoh kosar bot?'\n\nTanya pendapat ke bot: 'bot, apakah ...'")
         elif text_contains(msg, ['bagi', 'meme'], series=True, max_len=100):
             payload = self.memeService.reply()
             #foundNumber = False
@@ -130,6 +130,8 @@ class KinshipBot:
                 payload = self.spreadsheetService.reply(-1)
             else:
                 payload = self.spreadsheetService.reply()
+        elif ('apakah' in msg):
+            self.reply(event, ("ReplyText", self.message.YesOrNo()))
 
         self.reply(event, payload)
 
