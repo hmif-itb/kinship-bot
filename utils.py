@@ -120,6 +120,19 @@ class Message:
             'tugus',
             'shifa',
             'jek',
+            'fauzan',
+            'kotsar',
+            'hanif',
+            'rakha',
+            'gibet',
+            'nicho',
+            'tata',
+            'ilman',
+            'adila',
+            'wildan',
+            'tugus',
+            'shifa',
+            'jek',
             'fauzan'
         ]
         return self.randomize(name)

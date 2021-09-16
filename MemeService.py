@@ -59,4 +59,5 @@ class MemeService:
         memes = self.getMeme(count)
         if (memes == None):
             return ("ReplyText", "Failed to fetch meme, sorry!")
-        return ("Image", memes)
+        # return ("Image", memes)
+        return ("ReplyImage", memes[0])

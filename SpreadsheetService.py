@@ -64,24 +64,24 @@ class SpreadsheetService:
                 text += "\n"
             text += "{} - {}".format(o["NIM"], o["Nama"])
             i += 1
-        return ("Text", [text])
+        return ("ReplyText", text)
 
     def getPhotoByNIM(self, nim: int):
         data = self.getDataByNIM(nim)
         if (data == None):
-            return ("Text", ["Something went wrong"])
+            return ("ReplyText", "Something went wrong")
         if (len(data.keys()) == 0):
-            return ("Text", [self.message.NIMNotFound(nim)])
+            return ("ReplyText", self.message.NIMNotFound(nim))
         return ("UnprocessedImage", [data['Foto'], data['NIM'], data['Nama']])
 
     def replyData(self, panggilan):
         result = self.getDataByPanggilan(panggilan)
         if (result == None):
-            return ("Text", ["Something went wrong"])
+            return ("ReplyText", "Something went wrong")
         if (len(result['Result']) == 0):
-            return ("Text", [self.message.PanggilanNotFound(panggilan)])
-        if (len(result['Result']) >= 20):
-            return ("Text", ["Nama panggilan yang ditulis terlalu general"])
+            return ("ReplyText", self.message.PanggilanNotFound(panggilan))
+        if (len(result['Result']) >= 40):
+            return ("ReplyText", "Nama panggilan yang ditulis terlalu general")
 
         dateToName = dict()
         for i in result['Result']:
@@ -92,17 +92,11 @@ class SpreadsheetService:
                 dateToName[i['Ultah']] = "{}\n{} - {} ({})".format(
                     i['Ultah'], i['NIM'], i['Nama'], i['Panggilan'])
 
-        msgs = []
         msg = "Data nama panggilan '{}'\n".format(panggilan)
         i = 0
         for k in dateToName:
             if (i > 0):
                 msg += "\n\n"
-            if (i >= 10):
-                i = 0
-                msgs.append(msg)
-                msg = ""
             msg += dateToName[k]
             i += 1
-        msgs.append(msg)
-        return ("Text", msgs)
+        return ("ReplyText", msg)

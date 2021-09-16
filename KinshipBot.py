@@ -47,47 +47,49 @@ class KinshipBot:
         payload = ("Nothing",)
         msg = msg.lower()
         if text_contains(msg, ['bagi', 'meme'], series=True, max_len=100):
-            foundNumber = False
-            for i in range(5, 0, -1):
-                if (str(i) in msg):
-                    self.reply(event, ("Text", [self.message.MemeWait(i)]))
-                    payload = self.memeService.reply(i)
-                    foundNumber = True
-                    break
-            if not(foundNumber):
-                self.reply(event, ("Text", [self.message.MemeWait()]))
-                payload = self.memeService.reply()
+            payload = self.memeService.reply()
+            #foundNumber = False
+            # for i in range(5, 0, -1):
+            # if (str(i) in msg):
+            #self.reply(event, ("Text", [self.message.MemeWait(i)]))
+            #payload = self.memeService.reply(i)
+            #foundNumber = True
+            # break
+            # if not(foundNumber):
+            #self.reply(event, ("Text", [self.message.MemeWait()]))
+            #payload = self.memeService.reply()
+
         elif text_contains(msg, ['bagi', 'data', 'nama'], series=True, max_len=150):
             splitMsg = msg.split(" ")
             try:
                 idx = splitMsg.index("nama")
                 if (idx+1 <= len(splitMsg)-1):
                     pg = splitMsg[idx+1]
-                    self.reply(
-                        event, ("Text", [self.message.FindWait()]))
+                    # self.reply(
+                    #    event, ("Text", [self.message.FindWait()]))
                     payload = self.spreadsheetService.replyData(pg)
             except ValueError:
                 payload = ("Nothing",)
-        elif text_contains(msg, ['hai', 'bot'], series=True, max_len=150):
+        elif text_contains(msg, ['hai', 'bot'], series=True, max_len=150) or text_contains(msg, ['hi', 'bot'], series=True, max_len=150) or text_contains(msg, ['halo', 'bot'], series=True, max_len=150):
             self.reply(event, ("ReplyText", self.message.Hai()))
         elif text_contains(msg, ['siapa', 'jodoh'], series=True, max_len=150):
             self.reply(event, ("ReplyText", self.message.NamaOrang()))
         elif text_contains(msg, ['bagi', 'jokes', 'bapak'], series=True, max_len=150):
             self.reply(
-                event, ("Image", ["https://jokesbapak2.herokuapp.com/v1/id/" + str(random.randint(1, 154))]))
+                event, ("ReplyImage", ["https://jokesbapak2.herokuapp.com/v1/id/" + str(random.randint(1, 154))]))
         elif text_contains(msg, ['bagi', 'foto', 'nim'], series=True, max_len=150):
             splitMsg = msg.split(" ")
             try:
                 idx = splitMsg.index("nim")
                 if (idx+1 <= len(splitMsg)-1):
                     nim = int(splitMsg[idx+1])
-                    self.reply(
-                        event, ("Text", [self.message.EditWait(nim)]))
+                    # self.reply(
+                    #    event, ("Text", [self.message.EditWait(nim)]))
                     payload = self.spreadsheetService.getPhotoByNIM(nim)
             except ValueError:
                 payload = ("Nothing",)
         elif text_contains(msg, ['siapa', 'ultah'], series=True, max_len=150):
-            self.reply(event, ("Text", [self.message.FindWait()]))
+            #self.reply(event, ("Text", [self.message.FindWait()]))
             if text_contains(msg, ['besok'], series=True, max_len=150):
                 payload = self.spreadsheetService.reply(1)
             elif text_contains(msg, ['lusa', 'kemarin'], series=True, max_len=150):
@@ -146,9 +148,9 @@ class KinshipBot:
                 output, str(data[1][1]), data[1][2])
             result = self.imgService.upload(edited)
             if (result.startswith("Error:")):
-                self.reply(event, ("Text", [result]))
+                self.reply(event, ("ReplyText", result))
             else:
-                self.reply(event, ("Image", [result]))
+                self.reply(event, ("ReplyImage", result))
         elif (data[0] == "ReplyText"):
             self.lineBotService.reply_message(
                 event.reply_token, TextSendMessage(text=data[1]))
