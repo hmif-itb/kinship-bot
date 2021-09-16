@@ -23,7 +23,6 @@ class KinshipBot:
     message = Message()
 
     def __init__(self):
-        print(sys.argv)
         if ('--dev' in sys.argv):
             with open('.env', 'r') as envfile:
                 envs = envfile.read()
@@ -49,7 +48,7 @@ class KinshipBot:
         msg = msg.lower()
         if text_contains(msg, ['bagi', 'meme'], series=True, max_len=100):
             foundNumber = False
-            for i in range(10, 0, -1):
+            for i in range(5, 0, -1):
                 if (str(i) in msg):
                     self.reply(event, ("Text", [self.message.MemeWait(i)]))
                     payload = self.memeService.reply(i)
@@ -58,6 +57,17 @@ class KinshipBot:
             if not(foundNumber):
                 self.reply(event, ("Text", [self.message.MemeWait()]))
                 payload = self.memeService.reply()
+        elif text_contains(msg, ['bagi', 'data', 'nama'], series=True, max_len=150):
+            splitMsg = msg.split(" ")
+            try:
+                idx = splitMsg.index("nama")
+                if (idx+1 <= len(splitMsg)-1):
+                    pg = splitMsg[idx+1]
+                    self.reply(
+                        event, ("Text", [self.message.FindWait()]))
+                    payload = self.spreadsheetService.replyData(pg)
+            except ValueError:
+                payload = ("Nothing",)
         elif text_contains(msg, ['hai', 'bot'], series=True, max_len=150):
             self.reply(event, ("ReplyText", self.message.Hai()))
         elif text_contains(msg, ['siapa', 'jodoh'], series=True, max_len=150):
@@ -73,10 +83,11 @@ class KinshipBot:
                     nim = int(splitMsg[idx+1])
                     self.reply(
                         event, ("Text", [self.message.EditWait(nim)]))
-                    payload = self.spreadsheetService.getPhoto(nim)
+                    payload = self.spreadsheetService.getPhotoByNIM(nim)
             except ValueError:
                 payload = ("Nothing",)
         elif text_contains(msg, ['siapa', 'ultah'], series=True, max_len=150):
+            self.reply(event, ("Text", [self.message.FindWait()]))
             if text_contains(msg, ['besok'], series=True, max_len=150):
                 payload = self.spreadsheetService.reply(1)
             elif text_contains(msg, ['lusa', 'kemarin'], series=True, max_len=150):

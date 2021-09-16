@@ -35,6 +35,16 @@ class Message:
         ]
         return self.randomize(messages)
 
+    def FindWait(self):
+        messages = [
+            'Bentar, dicari dulu gan',
+            'Sedang mencari data',
+            'Ok, tunggu bentar',
+            'Lagi memproses, lagi nyariin nih...',
+            'Sabar ya, dicari duls'
+        ]
+        return self.randomize(messages)
+
     def EditWait(self, nim: int):
         nstr = str(nim)
         messages = [
@@ -42,6 +52,16 @@ class Message:
             'Sedang mengedit foto nim ' + nstr,
             'Edit? OK, tunggu sebentar',
             nstr + "? wait, dicari dulu fotonya yak..."
+        ]
+        return self.randomize(messages)
+
+    def PanggilanNotFound(self, pg):
+        messages = [
+            'panggilan ' + pg + ' gak ditemukan',
+            'panggilan ' + pg + ' tidak ditemukan',
+            'panggilan ' + pg + ' gak ada coi',
+            'panggilan ' + pg + ' tidak ada di database',
+            'coba lagi dengan nama panggilan yang lain, panggilan ' + pg + ' gak ada',
         ]
         return self.randomize(messages)
 

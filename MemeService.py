@@ -51,8 +51,8 @@ class MemeService:
                 return None
 
     def reply(self, count=1):
-        if count > 10:
-            count = 10
+        if count > 5:
+            count = 5
         if count < 0:
             count = 1
 

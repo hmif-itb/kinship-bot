@@ -11,7 +11,7 @@ class SpreadsheetService:
 
     def checkUltah(self, delta=None):
         postData = dict()
-        postData['targetSheet'] = "ALL"
+        postData['action'] = 'getByDate'
         if (delta != None):
             postData['delta'] = int(delta)
 
@@ -23,10 +23,25 @@ class SpreadsheetService:
         except:
             return None
 
-    def getData(self, nim: int):
+    def getDataByNIM(self, nim: int):
         postData = dict()
-        postData['action'] = 'data'
+        postData['action'] = 'getByNIM'
         postData['nim'] = nim
+
+        try:
+            resp = requests.get(self.spreadsheetScriptAPI,
+                                params=postData, verify=True)
+            result = resp.json()
+            if 'error' in result.keys():
+                return dict()
+            return result
+        except:
+            return None
+
+    def getDataByPanggilan(self, panggilan: str):
+        postData = dict()
+        postData['action'] = 'getByPanggilan'
+        postData['panggilan'] = panggilan
 
         try:
             resp = requests.get(self.spreadsheetScriptAPI,
@@ -51,10 +66,43 @@ class SpreadsheetService:
             i += 1
         return ("Text", [text])
 
-    def getPhoto(self, nim: int):
-        data = self.getData(nim)
+    def getPhotoByNIM(self, nim: int):
+        data = self.getDataByNIM(nim)
         if (data == None):
-            return ("ReplyText", "Something went wrong")
+            return ("Text", ["Something went wrong"])
         if (len(data.keys()) == 0):
-            return ("ReplyText", self.message.NIMNotFound(nim))
+            return ("Text", [self.message.NIMNotFound(nim)])
         return ("UnprocessedImage", [data['Foto'], data['NIM'], data['Nama']])
+
+    def replyData(self, panggilan):
+        result = self.getDataByPanggilan(panggilan)
+        if (result == None):
+            return ("Text", ["Something went wrong"])
+        if (len(result['Result']) == 0):
+            return ("Text", [self.message.PanggilanNotFound(panggilan)])
+        if (len(result['Result']) >= 20):
+            return ("Text", ["Nama panggilan yang ditulis terlalu general"])
+
+        dateToName = dict()
+        for i in result['Result']:
+            if (i['Ultah'] in dateToName.keys()):
+                dateToName[i['Ultah']] += "\n{} - {} ({})".format(
+                    i['NIM'], i['Nama'], i['Panggilan'])
+            else:
+                dateToName[i['Ultah']] = "{}\n{} - {} ({})".format(
+                    i['Ultah'], i['NIM'], i['Nama'], i['Panggilan'])
+
+        msgs = []
+        msg = "Data nama panggilan '{}'\n".format(panggilan)
+        i = 0
+        for k in dateToName:
+            if (i > 0):
+                msg += "\n\n"
+            if (i >= 10):
+                i = 0
+                msgs.append(msg)
+                msg = ""
+            msg += dateToName[k]
+            i += 1
+        msgs.append(msg)
+        return ("Text", msgs)
