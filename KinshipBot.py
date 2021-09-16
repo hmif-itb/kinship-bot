@@ -72,11 +72,15 @@ class KinshipBot:
                 payload = ("Nothing",)
         elif text_contains(msg, ['hai', 'bot'], series=True, max_len=150) or text_contains(msg, ['hi', 'bot'], series=True, max_len=150) or text_contains(msg, ['halo', 'bot'], series=True, max_len=150):
             self.reply(event, ("ReplyText", self.message.Hai()))
+        elif text_contains(msg, ['gws', 'bot'], series=True, max_len=150):
+            self.reply(event, ("ReplyText", self.message.Thankyou()))
+        elif text_contains(msg, ['thx', 'bot'], series=True, max_len=150) or text_contains(msg, ['thanks', 'bot'], series=True, max_len=150) or text_contains(msg, ['thank', 'you', 'bot'], series=True, max_len=150) or text_contains(msg, ['makasih', 'bot'], series=True, max_len=150):
+            self.reply(event, ("ReplyText", self.message.Thankyou()))
         elif text_contains(msg, ['siapa', 'jodoh'], series=True, max_len=150):
             self.reply(event, ("ReplyText", self.message.NamaOrang()))
         elif text_contains(msg, ['bagi', 'jokes', 'bapak'], series=True, max_len=150):
             self.reply(
-                event, ("ReplyImage", ["https://jokesbapak2.herokuapp.com/v1/id/" + str(random.randint(1, 154))]))
+                event, ("ReplyImage", "https://jokesbapak2.herokuapp.com/v1/id/" + str(random.randint(1, 154))))
         elif text_contains(msg, ['bagi', 'foto', 'nim'], series=True, max_len=150):
             splitMsg = msg.split(" ")
             try:

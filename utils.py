@@ -106,6 +106,25 @@ class Message:
         ]
         return self.randomize(messages)
 
+    def Thankyou(self):
+        messages = [
+            'Yo thx',
+            'Thankyou',
+            'Yoi',
+            'thanks',
+            'makasih'
+        ]
+        return self.randomize(messages)
+
+    def Welcome(self):
+        messages = [
+            'Yo sama-sama',
+            'Sama-sama',
+            'Yoi',
+            'my pleasure'
+        ]
+        return self.randomize(messages)
+
     def NamaOrang(self):
         name = [
             'kotsar',
