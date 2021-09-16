@@ -4,6 +4,7 @@ from MemeService import MemeService
 from linebot.models.send_messages import TextSendMessage, ImageSendMessage
 from ImageService import ImageService
 from utils import Message, text_contains
+from random import randint
 import time
 import random
 import os
@@ -76,6 +77,14 @@ class KinshipBot:
                 payload = ("Nothing",)
         elif text_contains(msg, ['siapa', 'jodoh'], series=True, max_len=150):
             self.reply(event, ("ReplyText", self.message.NamaOrang()))
+        elif (text_contains(msg, ['bagi', 'quote'], series=True, max_len=150)
+              or text_contains(msg, ['bagi', 'kata', 'bijak'], series=True, max_len=150)
+              or text_contains(msg, ['bagi', 'kata2', 'bijak'], series=True, max_len=150)):
+            x = randint(1, 10)
+            if (x % 2 == 0):
+                self.reply(event, ("ReplyText", self.message.AnimeQuote()))
+            else:
+                self.reply(event, ("ReplyText", self.message.Quote()))
         elif text_contains(msg, ['bagi', 'jokes', 'bapak'], series=True, max_len=150) or text_contains(msg, ['bagi', 'jokes', 'bapak2'], series=True, max_len=150):
             self.reply(
                 event, ("ReplyImage", "https://jokesbapak2.herokuapp.com/v1/id/" + str(random.randint(1, 154))))

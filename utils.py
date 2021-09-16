@@ -1,4 +1,5 @@
 from random import randint
+import requests
 
 
 def text_contains(text, keywords, series=False, max_len=9999):
@@ -26,6 +27,23 @@ class Message:
         if (len(messages) == 0):
             return "Failed to get message"
         return messages[randint(0, len(messages)-1)]
+
+    def AnimeQuote(self):
+        try:
+            resp = requests.get(
+                "https://animechan.vercel.app/api/random", verify=True)
+            result = resp.json()
+            return "\"{}\" - {} (Anime: {})".format(result['quote'], result['character'], result['anime'])
+        except:
+            return "Failed to fetch quote"
+
+    def Quote(self):
+        try:
+            resp = requests.get("https://api.quotable.io/random", verify=True)
+            result = resp.json()
+            return "\"{}\" - {}".format(result['content'], result['author'])
+        except:
+            return "Failed to fetch quote"
 
     def YesOrNo(self):
         messages = [
