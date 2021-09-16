@@ -125,6 +125,9 @@ function getByNIM(nim, target) {
 
     var result = { errors: "nim is not found" };
     const filtered = filterByNIM(data, nim);
+    filtered.forEach((i) => {
+        i["Ultah"] = i["Ultah"].getDate() + " " + MONTHS_NAME[i["Ultah"].getMonth()];
+    });
     if (filtered.length !== 0) {
         result = filtered[0];
     }
@@ -142,6 +145,7 @@ function getByPanggilan(panggilan, target) {
 
     const result = [];
     filterByPanggilan(data, panggilan).forEach((i) => {
+        i["Ultah"] = i["Ultah"].getDate() + " " + MONTHS_NAME[i["Ultah"].getMonth()];
         result.push(i);
     });
     return {
