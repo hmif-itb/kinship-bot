@@ -11,7 +11,7 @@ import sys
 
 
 CONFIG_KEYS = ['LINE_SECRET_TOKEN', 'LINE_ACCESS_TOKEN',
-               'IMGBB_API_KEY', 'SPREADSHEET_SCRIPT_API', 'GROUP_ID_AUTO_REMINDER']
+               'IMGBB_API_KEY', 'SPREADSHEET_SCRIPT_API']
 
 
 class KinshipBot:
@@ -46,7 +46,11 @@ class KinshipBot:
     def handleMessage(self, event, msg: str):
         payload = ("Nothing",)
         msg = msg.lower()
-        if text_contains(msg, ['bagi', 'meme'], series=True, max_len=100):
+        if (not('bot' in msg)):
+            return
+        if ('help' in msg):
+            payload = ("ReplyText", "Apa yang bisa dibantu?\nFoto: 'bot bagi foto nim xxx' atau 'bagi foto nim xxx dong bot'\n\nCek ultah: 'bot, siapa yang ultah hari ini?'\nSupported keyword: hari ini, besok, kemarin, lusa, lusa kemarin, x hari lagi, x hari lalu, minggu depan, minggu lalu\n\nSearch by nama panggilan: 'bot, bagi data dengan nama xxx' atau 'bagi data dengan nama xxx dong bot'\n\nKalau mau meme: 'bot, bagi meme dong' atau 'bagi meme ya bot'\n\nKalau mau dad jokes: 'bot, bagi jokes bapak2' atau 'bagi jokes bapak bapak dong bot'\n\nHal-hal umum seperti: 'hai bot', 'gws bot', 'thank you bot' juga akan gue balas\n\nKalau mau tau cari jodoh: 'bot siapa jodoh gue?' atau 'siapa jodoh kosar bot?'")
+        elif text_contains(msg, ['bagi', 'meme'], series=True, max_len=100):
             payload = self.memeService.reply()
             #foundNumber = False
             # for i in range(5, 0, -1):
@@ -70,15 +74,15 @@ class KinshipBot:
                     payload = self.spreadsheetService.replyData(pg)
             except ValueError:
                 payload = ("Nothing",)
-        elif text_contains(msg, ['hai', 'bot'], series=True, max_len=150) or text_contains(msg, ['hi', 'bot'], series=True, max_len=150) or text_contains(msg, ['halo', 'bot'], series=True, max_len=150):
+        elif ('hai' in msg or 'halo' in msg or 'hi' in msg):
             self.reply(event, ("ReplyText", self.message.Hai()))
-        elif text_contains(msg, ['gws', 'bot'], series=True, max_len=150):
+        elif ('gws' in msg or 'get well soon' in msg):
             self.reply(event, ("ReplyText", self.message.Thankyou()))
-        elif text_contains(msg, ['thx', 'bot'], series=True, max_len=150) or text_contains(msg, ['thanks', 'bot'], series=True, max_len=150) or text_contains(msg, ['thank', 'you', 'bot'], series=True, max_len=150) or text_contains(msg, ['makasih', 'bot'], series=True, max_len=150):
+        elif ('makasih' in msg or 'thx' in msg or 'thanks' in msg or 'thank you' in msg or 'terima kasih' in msg or 'terimakasih' in msg):
             self.reply(event, ("ReplyText", self.message.Thankyou()))
         elif text_contains(msg, ['siapa', 'jodoh'], series=True, max_len=150):
             self.reply(event, ("ReplyText", self.message.NamaOrang()))
-        elif text_contains(msg, ['bagi', 'jokes', 'bapak'], series=True, max_len=150):
+        elif text_contains(msg, ['bagi', 'jokes', 'bapak'], series=True, max_len=150) or text_contains(msg, ['bagi', 'jokes', 'bapak2'], series=True, max_len=150):
             self.reply(
                 event, ("ReplyImage", "https://jokesbapak2.herokuapp.com/v1/id/" + str(random.randint(1, 154))))
         elif text_contains(msg, ['bagi', 'foto', 'nim'], series=True, max_len=150):
