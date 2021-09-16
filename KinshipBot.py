@@ -74,12 +74,6 @@ class KinshipBot:
                     payload = self.spreadsheetService.replyData(pg)
             except ValueError:
                 payload = ("Nothing",)
-        elif ('hai' in msg or 'halo' in msg or 'hi' in msg):
-            self.reply(event, ("ReplyText", self.message.Hai()))
-        elif ('gws' in msg or 'get well soon' in msg):
-            self.reply(event, ("ReplyText", self.message.Thankyou()))
-        elif ('makasih' in msg or 'thx' in msg or 'thanks' in msg or 'thank you' in msg or 'terima kasih' in msg or 'terimakasih' in msg):
-            self.reply(event, ("ReplyText", self.message.Thankyou()))
         elif text_contains(msg, ['siapa', 'jodoh'], series=True, max_len=150):
             self.reply(event, ("ReplyText", self.message.NamaOrang()))
         elif text_contains(msg, ['bagi', 'jokes', 'bapak'], series=True, max_len=150) or text_contains(msg, ['bagi', 'jokes', 'bapak2'], series=True, max_len=150):
@@ -130,8 +124,19 @@ class KinshipBot:
                 payload = self.spreadsheetService.reply(-1)
             else:
                 payload = self.spreadsheetService.reply()
-        elif ('apakah' in msg):
+        elif text_contains(msg, ['apakah'], series=True, max_len=150):
             self.reply(event, ("ReplyText", self.message.YesOrNo()))
+        elif ('hai' in msg or 'halo' in msg or 'hi' in msg):
+            self.reply(event, ("ReplyText", self.message.Hai()))
+        elif ('gws' in msg or 'get well soon' in msg):
+            self.reply(event, ("ReplyText", self.message.Thankyou()))
+        elif ('makasih' in msg
+              or 'thx' in msg
+              or 'thanks' in msg
+              or 'thank you' in msg
+              or 'terima kasih' in msg
+              or 'terimakasih' in msg):
+            self.reply(event, ("ReplyText", self.message.Thankyou()))
 
         self.reply(event, payload)
 

@@ -29,20 +29,16 @@ class Message:
 
     def YesOrNo(self):
         messages = [
-            'yes',
-            'no',
-            'ya',
-            'gak',
-            'iya',
-            'tentatif',
-            'belum tentu',
-            'mungkin',
-            'tidak',
-            'yep',
-            'tidak mungkin',
-            'tidak bisa dipungkiri',
-            'pastilah',
-            'gak yakin'
+            'yes', 'no',
+            'ya', 'gak',
+            'iya', 'ngak',
+            'tentatif', 'belum tentu', 'mungkin',
+            'tidak', 'yep',
+            'tidak mungkin', 'tidak terbantahkan',
+            'pastilah', 'gak yakin',
+            'yes', 'no',
+            'bisa jadi', 'tergantung',
+            'aku sih yes', 'aku sih no'
         ]
         return messages[randint(0, len(messages)-1)]
 
