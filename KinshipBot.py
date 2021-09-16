@@ -136,7 +136,7 @@ class KinshipBot:
               or 'thank you' in msg
               or 'terima kasih' in msg
               or 'terimakasih' in msg):
-            self.reply(event, ("ReplyText", self.message.Thankyou()))
+            self.reply(event, ("ReplyText", self.message.Welcome()))
 
         self.reply(event, payload)
 
