@@ -1,3 +1,37 @@
+function doGet(e) {
+    if (!e) {
+        e = {};
+    }
+
+    if (!e.parameter) {
+        e.parameter = {};
+    }
+
+    if (!e.parameter.action) {
+        e.parameter.action = "getByDate";
+    }
+
+    if (!e.parameter.target) {
+        e.parameter.target = "ALL";
+    }
+
+    const action = e.parameter.action;
+    const target = e.parameter.target;
+    const param = e.parameter;
+    var result = { error: "action not found" };
+    if (action == "getByDate") {
+        result = getByDate(param.delta, target);
+    } else if (action == "getByNIM") {
+        result = getByNIM(param.nim, target);
+    } else if (action == "getByPanggilan") {
+        result = getByPanggilan(param.panggilan, target);
+    }
+
+    return ContentService.createTextOutput(JSON.stringify(result)).setMimeType(
+        ContentService.MimeType.JSON
+    );
+}
+
 const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
 
 function getDataFromSheet(sheetsName) {
