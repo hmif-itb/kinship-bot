@@ -41,16 +41,7 @@ const MONTHS_NAME = {
     11: "December",
 };
 
-function getByDate(delta, target) {
-    var filterDate = new Date();
-    var d;
-    if (delta) {
-        d = parseInt(delta);
-    } else {
-        d = 0;
-    }
-    filterDate.setDate(filterDate.getDate() + d);
-
+function fetchData(target) {
     var data = [];
     if (target == "ALL") {
         let sheetsName = [];
@@ -61,6 +52,20 @@ function getByDate(delta, target) {
     } else {
         data = getDataFromSheet(target);
     }
+    return data;
+}
+
+function getByDate(delta, target) {
+    var filterDate = new Date();
+    var d;
+    if (delta) {
+        d = parseInt(delta);
+    } else {
+        d = 0;
+    }
+    filterDate.setDate(filterDate.getDate() + d);
+
+    var data = fetchData(target);
 
     const result = [];
     filterByDate(data, filterDate).forEach((i) => {
@@ -75,6 +80,41 @@ function getByDate(delta, target) {
         Date: filterDate.getDate() + " " + MONTHS_NAME[filterDate.getMonth()],
     };
 }
+function getByNIM(nim, target) {
+    if (!nim) {
+        return {
+            errors: "nim is required parameter",
+        };
+    }
+
+    var data = fetchData(target);
+
+    var result = { errors: "nim is not found" };
+    const filtered = filterByNIM(data, nim);
+    if (filtered.length !== 0) {
+        result = filtered[0];
+    }
+    return result;
+}
+
+function getByPanggilan(panggilan, target) {
+    if (!panggilan) {
+        return {
+            errors: "panggilan is required parameter",
+        };
+    }
+
+    var data = fetchData(target);
+
+    const result = [];
+    filterByPanggilan(data, panggilan).forEach((i) => {
+        result.push(i);
+    });
+    return {
+        Result: result,
+        Panggilan: panggilan,
+    };
+}
 
 function filterByDate(data, filterDate) {
     return data.filter(
@@ -86,4 +126,10 @@ function filterByDate(data, filterDate) {
 
 function filterByNIM(data, nim) {
     return data.filter((item) => item["NIM"] == nim);
+}
+
+function filterByPanggilan(data, panggilan) {
+    return data.filter((item) =>
+        item["Panggilan"].toLowerCase().indexOf(panggilan) >= 0 ? true : false
+    );
 }
