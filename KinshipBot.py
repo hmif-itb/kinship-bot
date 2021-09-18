@@ -50,7 +50,7 @@ class KinshipBot:
         if (not('bot' in msg) or 'http' in msg or 'https' in msg):
             return
         if ('help' in msg):
-            payload = ("ReplyText", "Apa yang bisa dibantu?\nFoto: 'bot bagi foto nim xxx' atau 'bagi foto nim xxx dong bot'\n\nCek ultah: 'bot, siapa yang ultah hari ini?'\nSupported keyword: hari ini, besok, kemarin, lusa, lusa kemarin, x hari lagi, x hari lalu, minggu depan, minggu lalu\n\nSearch by nama panggilan: 'bot, bagi data dengan nama xxx' atau 'bagi data dengan nama xxx dong bot'\n\nKalau mau meme: 'bot, bagi meme dong' atau 'bagi meme ya bot'\n\nKalau mau dad jokes: 'bot, bagi jokes bapak2' atau 'bagi jokes bapak bapak dong bot'\n\nHal-hal umum seperti: 'hai bot', 'gws bot', 'thank you bot' juga akan gue balas\n\nKalau mau tau cari jodoh: 'bot siapa jodoh gue?' atau 'siapa jodoh kosar bot?'\n\nTanya pendapat ke bot: 'bot, apakah ...'\n\nButuh quote? 'bot, bagi quote dong'")
+            payload = ("ReplyText", "Apa yang bisa dibantu?\nFoto: 'bot bagi foto nim xxx' atau 'bagi foto nim xxx dong bot'\n\nCek ultah: 'bot, siapa yang ultah hari ini?'\nSupported keyword: hari ini, besok, kemarin, lusa, lusa kemarin, x hari lagi, x hari lalu, minggu depan, minggu lalu\n\nSearch by nama panggilan: 'bot, bagi data dengan nama xxx' atau 'bagi data dengan nama xxx dong bot'\n\nKalau mau meme: 'bot, bagi meme dong' atau 'bagi meme ya bot'\n\nKalau mau dad jokes: 'bot, bagi jokes bapak2' atau 'bagi jokes bapak bapak dong bot'\n\nHal-hal umum seperti: 'hai bot', 'gws bot', 'thank you bot' juga akan gue balas\n\nKalau mau tanya siapa: 'bot siapa jodoh gue?' atau 'siapa jodoh kosar bot?'\n\nTanya pendapat ke bot: 'bot, apakah ...'\n\nButuh quote? 'bot, bagi quote dong'\n\nKalau mau this/that? 'bot pilih ... atau ...' (format paten harus plek begini)")
         elif text_contains(msg, ['bagi', 'meme'], series=True, max_len=100):
             payload = self.memeService.reply()
             #foundNumber = False
@@ -135,6 +135,41 @@ class KinshipBot:
             self.reply(event, ("ReplyText", self.message.NamaOrang()))
         elif text_contains(msg, ['apakah'], series=True, max_len=150):
             self.reply(event, ("ReplyText", self.message.YesOrNo()))
+        elif text_contains(msg, ['bot', 'pilih'], series=True, max_len=150):
+            splitMsg = msg.split(" ")
+            startMsg1Idx = None
+            endMsg1Idx = None
+            startMsg2Idx = None
+
+            middleIdx = None
+            try:
+                idx = splitMsg.index("pilih")
+                if (idx+1 <= len(splitMsg)-1):
+                    startMsg1Idx = idx+1
+            except ValueError:
+                startMsg1Idx = None
+                payload = ("Nothing",)
+
+            if text_contains(msg, ['atau'], series=True, max_len=150):
+                try:
+                    middleIdx = splitMsg.index("atau")
+                except ValueError:
+                    middleIdx = None
+                    payload = ("Nothing",)
+
+            if (middleIdx != None):
+                if ((middleIdx >= 1) and (splitMsg[middleIdx-1] != "pilih") and (middleIdx+1 <= len(splitMsg) - 1)):
+                    endMsg1Idx = middleIdx-1
+                    startMsg2Idx = middleIdx+1
+
+            if (startMsg1Idx != None and startMsg2Idx != None and endMsg1Idx != None):
+                firstChoice = " ".join(splitMsg[startMsg1Idx:endMsg1Idx+1])
+                secondChoice = " ".join(splitMsg[startMsg2Idx:len(splitMsg)])
+                choice = randint(1, 6)
+                if (choice % 2 == 0):
+                    payload = ("ReplyText", firstChoice)
+                else:
+                    payload = ("ReplyText", secondChoice)
         elif ('hai' in msg or 'halo' in msg or 'hi' in msg):
             self.reply(event, ("ReplyText", self.message.Hai()))
         elif ('gws' in msg or 'get well soon' in msg):
