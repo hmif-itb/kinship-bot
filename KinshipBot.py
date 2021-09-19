@@ -1,3 +1,4 @@
+from MagicConchShellService import MagicConchShellService
 from linebot.api import LineBotApi
 from SpreadsheetService import SpreadsheetService
 from MemeService import MemeService
@@ -22,6 +23,7 @@ class KinshipBot:
     spreadsheetService = None
     Config = dict()
     message = Message()
+    mcsService = MagicConchShellService()
 
     def __init__(self):
         if ('--dev' in sys.argv):
@@ -131,56 +133,8 @@ class KinshipBot:
                 payload = self.spreadsheetService.reply(-1)
             else:
                 payload = self.spreadsheetService.reply()
-        elif text_contains(msg, ['siapa'], series=True, max_len=150) or text_contains(msg, ['siapakah'], series=True, max_len=150):
-            self.reply(event, ("ReplyText", self.message.NamaOrang()))
-        elif text_contains(msg, ['apakah'], series=True, max_len=150):
-            self.reply(event, ("ReplyText", self.message.YesOrNo()))
-        elif text_contains(msg, ['bot', 'pilih'], series=True, max_len=150):
-            splitMsg = msg.split(" ")
-            startMsg1Idx = None
-            endMsg1Idx = None
-            startMsg2Idx = None
-
-            middleIdx = None
-            try:
-                idx = splitMsg.index("pilih")
-                if (idx+1 <= len(splitMsg)-1):
-                    startMsg1Idx = idx+1
-            except ValueError:
-                startMsg1Idx = None
-                payload = ("Nothing",)
-
-            if text_contains(msg, ['atau'], series=True, max_len=150):
-                try:
-                    middleIdx = splitMsg.index("atau")
-                except ValueError:
-                    middleIdx = None
-                    payload = ("Nothing",)
-
-            if (middleIdx != None):
-                if ((middleIdx >= 1) and (splitMsg[middleIdx-1] != "pilih") and (middleIdx+1 <= len(splitMsg) - 1)):
-                    endMsg1Idx = middleIdx-1
-                    startMsg2Idx = middleIdx+1
-
-            if (startMsg1Idx != None and startMsg2Idx != None and endMsg1Idx != None):
-                firstChoice = " ".join(splitMsg[startMsg1Idx:endMsg1Idx+1])
-                secondChoice = " ".join(splitMsg[startMsg2Idx:len(splitMsg)])
-                choice = randint(1, 6)
-                if (choice % 2 == 0):
-                    payload = ("ReplyText", firstChoice)
-                else:
-                    payload = ("ReplyText", secondChoice)
-        elif ('hai' in msg or 'halo' in msg or 'hi' in msg):
-            self.reply(event, ("ReplyText", self.message.Hai()))
-        elif ('gws' in msg or 'get well soon' in msg):
-            self.reply(event, ("ReplyText", self.message.Thankyou()))
-        elif ('makasih' in msg
-              or 'thx' in msg
-              or 'thanks' in msg
-              or 'thank you' in msg
-              or 'terima kasih' in msg
-              or 'terimakasih' in msg):
-            self.reply(event, ("ReplyText", self.message.Welcome()))
+        else:
+            payload = self.mcsService.handleMessage(event, msg)
 
         self.reply(event, payload)
 

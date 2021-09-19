@@ -45,6 +45,15 @@ class Message:
         except:
             return "Failed to fetch quote"
 
+    def OneChoice(self):
+        messages = [
+            'kalau disuruh milih dengan 1 pilihan, ya pasti itu dong',
+            'kamu mau aku pilih apa dengan 1 pilihan doang',
+            'cuman ada 1 pilihan?',
+            'aku pilih atau deh...'
+        ]
+        return messages[randint(0, len(messages)-1)]
+
     def YesOrNo(self):
         messages = [
             'yes', 'no',
