@@ -10,10 +10,10 @@ class MagicConchShellService:
         payload = ("Nothing",)
         if (text_contains(msg, ['siapa'], series=True, max_len=150)
                 or text_contains(msg, ['siapakah'], series=True, max_len=150)):
-            self.reply(event, ("ReplyText", self.message.NamaOrang()))
+            payload = ("ReplyText", self.message.NamaOrang())
 
         elif text_contains(msg, ['apakah'], series=True, max_len=150):
-            self.reply(event, ("ReplyText", self.message.YesOrNo()))
+            payload = ("ReplyText", self.message.YesOrNo())
 
         elif (text_contains(msg, ['pilih'], series=True, max_len=150)):
             splitMsg = msg.split(" ")
@@ -73,11 +73,13 @@ class MagicConchShellService:
             #         payload = ("ReplyText", firstChoice)
             #     else:
             #         payload = ("ReplyText", secondChoice)
+        elif text_contains(msg, ['monitor bot'], series=True, max_len=150):
+            payload = ("ReplyText", 'monitor')
         elif ('hai' in msg or 'halo' in msg or 'hi' in msg):
-            self.reply(event, ("ReplyText", self.message.Hai()))
+            payload = ("ReplyText", self.message.Hai())
 
         elif ('gws' in msg or 'get well soon' in msg):
-            self.reply(event, ("ReplyText", self.message.Thankyou()))
+            payload = ("ReplyText", self.message.Thankyou())
 
         elif ('makasih' in msg
               or 'thx' in msg
@@ -85,6 +87,6 @@ class MagicConchShellService:
               or 'thank you' in msg
               or 'terima kasih' in msg
               or 'terimakasih' in msg):
-            self.reply(event, ("ReplyText", self.message.Welcome()))
+            payload = ("ReplyText", self.message.Welcome())
 
         return payload
