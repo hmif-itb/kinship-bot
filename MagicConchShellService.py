@@ -15,9 +15,7 @@ class MagicConchShellService:
         elif text_contains(msg, ['apakah'], series=True, max_len=150):
             self.reply(event, ("ReplyText", self.message.YesOrNo()))
 
-        elif (text_contains(msg, ['pilih'], series=True, max_len=150)
-              or text_contains(msg, ['pilihin'], series=True, max_len=150)
-              or text_contains(msg, ['pilihkan'], series=True, max_len=150)):
+        elif (text_contains(msg, ['pilih'], series=True, max_len=150)):
             splitMsg = msg.split(" ")
             startIdx = None
             try:
