@@ -58,12 +58,17 @@ class Message:
         rating = randint(0, 10)
         messages = [
             str(rating),
+            '0 aja deh, soalnya gada angka lebih kecil, kasian...',
             str(rating) + ', overrated gak?',
             str(rating),
             str(rating),
             str(rating) + ', underrated ya?',
-            '0 aja deh, soalnya gada angka lebih kecil, kasian...',
             '5 deh, asal abis bingung',
+            str(rating) + ', gimana?',
+            str(rating),
+            str(rating) + ', kebagusan ya?',
+            'kasih ' + str(rating) + ', kasian soalnya',
+            str(rating),
             str(rating),
             str(rating),
         ]
