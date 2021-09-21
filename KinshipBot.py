@@ -49,15 +49,16 @@ class KinshipBot:
     def handleMessage(self, event, msg: str):
         payload = ("Nothing",)
         msg = msg.lower()
-        if (not('bot' in msg) or 'http' in msg or 'https' in msg):
+        msgSplit = msg.split(" ")
+        if (not('bot' in msgSplit) or 'http' in msgSplit or 'https' in msgSplit):
             return
-        if ('help' in msg):
-            payload = ("ReplyText", "Apa yang bisa dibantu?\nFoto: 'bot bagi foto nim xxx' atau 'bagi foto nim xxx dong bot'\n\nCek ultah: 'bot, siapa yang ultah hari ini?'\nSupported keyword: hari ini, besok, kemarin, lusa, lusa kemarin, x hari lagi, x hari lalu, minggu depan, minggu lalu\n\nSearch by nama panggilan: 'bot, bagi data dengan nama xxx' atau 'bagi data dengan nama xxx dong bot'\n\nKalau mau meme: 'bot, bagi meme dong' atau 'bagi meme ya bot'\n\nKalau mau dad jokes: 'bot, bagi jokes bapak2' atau 'bagi jokes bapak bapak dong bot'\n\nHal-hal umum seperti: 'hai bot', 'gws bot', 'thank you bot' juga akan gue balas\n\nKalau mau tanya siapa: 'bot siapa jodoh gue?' atau 'siapa jodoh kosar bot?'\n\nTanya pendapat ke bot: 'bot, apakah ...'\n\nButuh quote? 'bot, bagi quote dong'\n\nKalau mau this/that? 'bot pilih ... atau ...' (format paten harus plek begini)")
-        elif text_contains(msg, ['bagi', 'meme'], series=True, max_len=100):
+        if ('help' in msgSplit):
+            payload = ("ReplyText", "Apa yang bisa dibantu?\nFoto: 'bot bagi foto nim xxx' atau 'bagi foto nim xxx dong bot'\n\nCek ultah: 'bot, siapa yang ultah hari ini?'\nSupported keyword: hari ini, besok, kemarin, lusa, lusa kemarin, x hari lagi, x hari lalu, minggu depan, minggu lalu\n\nSearch by nama panggilan: 'bot, bagi data dengan nama xxx' atau 'bagi data dengan nama xxx dong bot'\n\nKalau mau meme: 'bot, bagi meme dong' atau 'bagi meme ya bot'\n\nKalau mau dad jokes: 'bot, bagi jokes bapak2' atau 'bagi jokes bapak bapak dong bot'\n\nHal-hal umum seperti: 'hai bot', 'gws bot', 'thank you bot' juga akan gue balas\n\nKalau mau tanya siapa: 'bot siapa jodoh gue?' atau 'siapa jodoh kosar bot?'\n\nTanya pendapat ke bot: 'bot, apakah ...'\n\nButuh quote? 'bot, bagi quote dong'\n\nKalau mau this/that? 'bot pilih ... atau ... (atau ...)'\n\nMinta bot ngerating: 'bot, kasih rating buat ... dong'")
+        elif text_contains(msg, ['bagi', 'meme'], max_len=100):
             payload = self.memeService.reply()
             #foundNumber = False
             # for i in range(5, 0, -1):
-            # if (str(i) in msg):
+            # if (str(i) in msgSplit):
             #self.reply(event, ("Text", [self.message.MemeWait(i)]))
             #payload = self.memeService.reply(i)
             #foundNumber = True
@@ -66,8 +67,8 @@ class KinshipBot:
             #self.reply(event, ("Text", [self.message.MemeWait()]))
             #payload = self.memeService.reply()
 
-        elif text_contains(msg, ['bagi', 'data', 'nama'], series=True, max_len=150):
-            splitMsg = msg.split(" ")
+        elif text_contains(msg, ['bagi', 'data', 'nama']):
+            splitMsg = msgSplit.copy()
             try:
                 idx = splitMsg.index("nama")
                 if (idx+1 <= len(splitMsg)-1):
@@ -77,19 +78,19 @@ class KinshipBot:
                     payload = self.spreadsheetService.replyData(pg)
             except ValueError:
                 payload = ("Nothing",)
-        elif (text_contains(msg, ['bagi', 'quote'], series=True, max_len=150)
-              or text_contains(msg, ['bagi', 'kata', 'bijak'], series=True, max_len=150)
-              or text_contains(msg, ['bagi', 'kata2', 'bijak'], series=True, max_len=150)):
+        elif (text_contains(msg, ['bagi', 'quote'])
+              or text_contains(msg, ['bagi', 'kata', 'bijak'])
+              or text_contains(msg, ['bagi', 'kata2', 'bijak'])):
             x = randint(1, 10)
             if (x % 2 == 0):
                 self.reply(event, ("ReplyText", self.message.AnimeQuote()))
             else:
                 self.reply(event, ("ReplyText", self.message.Quote()))
-        elif text_contains(msg, ['bagi', 'jokes', 'bapak'], series=True, max_len=150) or text_contains(msg, ['bagi', 'jokes', 'bapak2'], series=True, max_len=150):
+        elif text_contains(msg, ['bagi', 'jokes', 'bapak']) or text_contains(msg, ['bagi', 'jokes', 'bapak2']):
             self.reply(
                 event, ("ReplyImage", "https://jokesbapak2.herokuapp.com/v1/id/" + str(random.randint(1, 154))))
-        elif text_contains(msg, ['bagi', 'foto', 'nim'], series=True, max_len=150):
-            splitMsg = msg.split(" ")
+        elif text_contains(msg, ['bagi', 'foto', 'nim']):
+            splitMsg = msgSplit.copy()
             try:
                 idx = splitMsg.index("nim")
                 if (idx+1 <= len(splitMsg)-1):
@@ -99,20 +100,20 @@ class KinshipBot:
                     payload = self.spreadsheetService.getPhotoByNIM(nim)
             except ValueError:
                 payload = ("Nothing",)
-        elif text_contains(msg, ['siapa', 'ultah'], series=True, max_len=150):
+        elif text_contains(msg, ['siapa', 'ultah']):
             #self.reply(event, ("Text", [self.message.FindWait()]))
-            if text_contains(msg, ['besok'], series=True, max_len=150):
+            if text_contains(msg, ['besok']):
                 payload = self.spreadsheetService.reply(1)
-            elif text_contains(msg, ['lusa', 'kemarin'], series=True, max_len=150):
+            elif text_contains(msg, ['lusa', 'kemarin']):
                 payload = self.spreadsheetService.reply(-2)
-            elif text_contains(msg, ['lusa'], series=True, max_len=150):
+            elif text_contains(msg, ['lusa']):
                 payload = self.spreadsheetService.reply(2)
-            elif text_contains(msg, ['minggu', 'depan'], series=True, max_len=150):
+            elif text_contains(msg, ['minggu', 'depan']):
                 payload = self.spreadsheetService.reply(7)
-            elif text_contains(msg, ['minggu', 'lalu'], series=True, max_len=150):
+            elif text_contains(msg, ['minggu', 'lalu']):
                 payload = self.spreadsheetService.reply(-7)
-            elif text_contains(msg, ['hari', 'lalu'], series=True, max_len=150):
-                splitMsg = msg.split(" ")
+            elif text_contains(msg, ['hari', 'lalu']):
+                splitMsg = msgSplit.copy()
                 try:
                     idx = splitMsg.index("hari")
                     if (idx >= 1):
@@ -120,8 +121,8 @@ class KinshipBot:
                         payload = self.spreadsheetService.reply(hari * -1)
                 except ValueError:
                     payload = ("Nothing",)
-            elif text_contains(msg, ['hari', 'lagi'], series=True, max_len=150):
-                splitMsg = msg.split(" ")
+            elif text_contains(msg, ['hari', 'lagi']):
+                splitMsg = msgSplit.copy()
                 try:
                     idx = splitMsg.index("hari")
                     if (idx >= 1):
@@ -129,7 +130,7 @@ class KinshipBot:
                         payload = self.spreadsheetService.reply(hari)
                 except ValueError:
                     payload = ("Nothing",)
-            elif text_contains(msg, ['kemarin'], series=True, max_len=150):
+            elif text_contains(msg, ['kemarin']):
                 payload = self.spreadsheetService.reply(-1)
             else:
                 payload = self.spreadsheetService.reply()

@@ -2,7 +2,7 @@ from random import randint
 import requests
 
 
-def text_contains(text, keywords, series=False, max_len=9999):
+def text_contains(text, keywords, series=True, max_len=9999):
     if len(text) > max_len:
         return False
 
@@ -53,6 +53,21 @@ class Message:
             'aku pilih atau deh...'
         ]
         return messages[randint(0, len(messages)-1)]
+
+    def Rating(self):
+        rating = randint(0, 10)
+        messages = [
+            str(rating),
+            str(rating) + ', overrated gak?',
+            str(rating),
+            str(rating),
+            str(rating) + ', underrated ya?',
+            '0 aja deh, soalnya gada angka lebih kecil, kasian...',
+            '5 deh, asal abis bingung',
+            str(rating),
+            str(rating),
+        ]
+        return self.randomize(messages)
 
     def YesOrNo(self):
         messages = [

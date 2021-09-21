@@ -8,15 +8,19 @@ class MagicConchShellService:
 
     def handleMessage(self, event, msg: str):
         payload = ("Nothing",)
-        if (text_contains(msg, ['siapa'], series=True, max_len=150)
-                or text_contains(msg, ['siapakah'], series=True, max_len=150)):
+        msgSplit = msg.split(" ")
+        if (text_contains(msg, ['siapa'])
+                or text_contains(msg, ['siapakah'])):
             payload = ("ReplyText", self.message.NamaOrang())
 
-        elif text_contains(msg, ['apakah'], series=True, max_len=150):
+        elif text_contains(msg, ['apakah']):
             payload = ("ReplyText", self.message.YesOrNo())
 
-        elif (text_contains(msg, ['pilih'], series=True, max_len=150)):
-            splitMsg = msg.split(" ")
+        elif text_contains(msg, ['kasih', 'rating']):
+            payload = ("ReplyText", self.message.Rating())
+
+        elif (text_contains(msg, ['pilih'])):
+            splitMsg = msgSplit.copy()
             startIdx = None
             try:
                 idx = splitMsg.index("pilih")
@@ -53,7 +57,7 @@ class MagicConchShellService:
             #     startMsg1Idx = None
             #     payload = ("Nothing",)
 
-            # if text_contains(msg, ['atau'], series=True, max_len=150):
+            # if text_contains(msg, ['atau']):
             #     try:
             #         middleIdx = splitMsg.index("atau")
             #     except ValueError:
@@ -73,20 +77,20 @@ class MagicConchShellService:
             #         payload = ("ReplyText", firstChoice)
             #     else:
             #         payload = ("ReplyText", secondChoice)
-        elif text_contains(msg, ['monitor bot'], series=True, max_len=150):
+        elif text_contains(msg, ['monitor bot']):
             payload = ("ReplyText", 'monitor')
-        elif ('hai' in msg or 'halo' in msg or 'hi' in msg):
+        elif ('hai' in msgSplit or 'halo' in msgSplit or 'hi' in msgSplit):
             payload = ("ReplyText", self.message.Hai())
 
-        elif ('gws' in msg or 'get well soon' in msg):
+        elif ('gws' in msgSplit or 'get well soon' in msgSplit):
             payload = ("ReplyText", self.message.Thankyou())
 
-        elif ('makasih' in msg
-              or 'thx' in msg
-              or 'thanks' in msg
-              or 'thank you' in msg
-              or 'terima kasih' in msg
-              or 'terimakasih' in msg):
+        elif ('makasih' in msgSplit
+              or 'thx' in msgSplit
+              or 'thanks' in msgSplit
+              or 'thank you' in msgSplit
+              or 'terima kasih' in msgSplit
+              or 'terimakasih' in msgSplit):
             payload = ("ReplyText", self.message.Welcome())
 
         return payload
