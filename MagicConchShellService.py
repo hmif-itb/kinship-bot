@@ -38,7 +38,7 @@ class MagicConchShellService:
 
             except ValueError:
                 pass
-            payload("ReplyText", str(randint(fromNumber, toNumber)))
+            payload = ("ReplyText", str(randint(fromNumber, toNumber)))
 
         elif (text_contains(msg, ['pilih'])):
             splitMsg = msgSplit.copy()
