@@ -1,6 +1,9 @@
 
 from utils import Message, text_contains
 from random import randint
+import bs4
+import requests
+from googletrans import Translator
 
 
 class MagicConchShellService:
@@ -108,6 +111,11 @@ class MagicConchShellService:
             #         payload = ("ReplyText", secondChoice)
         elif text_contains(msg, ['monitor', 'bot']):
             payload = ("ReplyText", 'monitor')
+        elif text_contains(msg, ['deskripsikan']):
+            payload = ("ReplyText", self.translate(self.getRandomAdjective()))
+        elif text_contains(msg, ['apa', 'pendapatmu', 'tentang']) or text_contains(msg, ['apa', 'pendapat', 'tentang']):
+            payload = ("ReplyText", self.translate(
+                " ".join([self.getRandomNoun(), self.getRandomAdjective()])))
         elif ('hai' in msgSplit or 'halo' in msgSplit or 'hi' in msgSplit):
             payload = ("ReplyText", self.message.Hai())
 
@@ -123,3 +131,20 @@ class MagicConchShellService:
             payload = ("ReplyText", self.message.Welcome())
 
         return payload
+
+    def getRandomAdjective(self):
+        resp = requests.get("https://randomword.com/adjective")
+        soup = bs4.BeautifulSoup(resp.content, 'html.parser')
+        word = soup.find_all(id="random_word")[0].get_text()
+        return word
+
+    def getRandomNoun(self):
+        resp = requests.get("https://randomword.com/noun")
+        soup = bs4.BeautifulSoup(resp.content, 'html.parser')
+        word = soup.find_all(id="random_word")[0].get_text()
+        return word
+
+    def translate(self, words: str):
+        translator = Translator()
+        result = translator.translate(words, src='en', dest='id').text
+        return result
