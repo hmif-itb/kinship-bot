@@ -42,7 +42,7 @@ class MagicConchShellService:
             if (fromNumber == toNumber):
                 payload = (
                     "ReplyText", "jadi, dari berapa sampai berapa nih? fix " + str(fromNumber) + ", dong?")
-            elif (fromNumber < toNumber):
+            elif (fromNumber > toNumber):
                 swapNumber = toNumber
                 toNumber = fromNumber
                 fromNumber = swapNumber
