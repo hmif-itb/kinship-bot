@@ -38,6 +38,14 @@ class MagicConchShellService:
 
             except ValueError:
                 pass
+
+            if (fromNumber == toNumber):
+                payload = (
+                    "ReplyText", "jadi, dari berapa sampai berapa nih? fix " + str(fromNumber) + ", dong?")
+            elif (fromNumber < toNumber):
+                swapNumber = toNumber
+                toNumber = fromNumber
+                fromNumber = swapNumber
             payload = ("ReplyText", str(randint(fromNumber, toNumber)))
 
         elif (text_contains(msg, ['pilih'])):
