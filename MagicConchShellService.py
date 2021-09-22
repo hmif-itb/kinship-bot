@@ -19,6 +19,27 @@ class MagicConchShellService:
         elif text_contains(msg, ['kasih', 'rating']):
             payload = ("ReplyText", self.message.Rating())
 
+        elif text_contains(msg, ['berapa']):
+            splitMsg = msgSplit.copy()
+            fromNumber = 0
+            toNumber = 10
+            try:
+                idx = splitMsg.index("dari")
+                if (idx+1 <= len(splitMsg)-1):
+                    fromNumber = int(splitMsg[idx+1])
+
+            except ValueError:
+                pass
+
+            try:
+                idx = splitMsg.index("sampai")
+                if (idx+1 <= len(splitMsg)-1):
+                    toNumber = int(splitMsg[idx+1])
+
+            except ValueError:
+                pass
+            payload("ReplyText", str(randint(fromNumber, toNumber)))
+
         elif (text_contains(msg, ['pilih'])):
             splitMsg = msgSplit.copy()
             startIdx = None
@@ -77,7 +98,7 @@ class MagicConchShellService:
             #         payload = ("ReplyText", firstChoice)
             #     else:
             #         payload = ("ReplyText", secondChoice)
-        elif text_contains(msg, ['monitor bot']):
+        elif text_contains(msg, ['monitor', 'bot']):
             payload = ("ReplyText", 'monitor')
         elif ('hai' in msgSplit or 'halo' in msgSplit or 'hi' in msgSplit):
             payload = ("ReplyText", self.message.Hai())

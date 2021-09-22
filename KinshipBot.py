@@ -49,6 +49,8 @@ class KinshipBot:
     def handleMessage(self, event, msg: str):
         payload = ("Nothing",)
         msg = msg.lower()
+        msg = msg.replace("bot,", "bot")
+        msg = msg.replace("bot?", "bot")
         msgSplit = msg.split(" ")
         if (not('bot' in msgSplit) or 'http' in msgSplit or 'https' in msgSplit):
             return
