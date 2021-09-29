@@ -55,7 +55,7 @@ class KinshipBot:
         if (not('bot' in msgSplit) or 'http' in msgSplit or 'https' in msgSplit):
             return
         if ('help' in msgSplit):
-            payload = ("ReplyText", "Apa yang bisa dibantu?\nFoto: 'bot bagi foto nim xxx' atau 'bagi foto nim xxx dong bot'\n\nCek ultah: 'bot, siapa yang ultah hari ini?'\nSupported keyword: hari ini, besok, kemarin, lusa, lusa kemarin, x hari lagi, x hari lalu, minggu depan, minggu lalu\n\nSearch by nama panggilan: 'bot, bagi data dengan nama xxx' atau 'bagi data dengan nama xxx dong bot'\n\nKalau mau meme: 'bot, bagi meme dong' atau 'bagi meme ya bot'\n\nKalau mau dad jokes: 'bot, bagi jokes bapak2' atau 'bagi jokes bapak bapak dong bot'\n\nHal-hal umum seperti: 'hai bot', 'gws bot', 'thank you bot' juga akan gue balas\n\nKalau mau tanya siapa: 'bot siapa jodoh gue?' atau 'siapa jodoh kosar bot?'\n\nTanya pendapat ke bot: 'bot, apakah ...'\n\nButuh quote? 'bot, bagi quote dong'\n\nKalau mau this/that? 'bot pilih ... atau ... (atau ...)'\n\nMinta bot ngerating: 'bot, kasih rating buat ... dong'\n\nKalau mau generate random number: 'dari ... sampai ... berapa ...'\n\nDeskripsi random: 'bot, deskripsikan ...'\n\nMinta pendapat: 'bot, apa pendapat bot tentang ...?")
+            payload = ("ReplyText", "Apa yang bisa dibantu?\nFoto: 'bot bagi foto nim xxx' atau 'bagi foto nim xxx dong bot'\n\nCek ultah: 'bot, siapa yang ultah hari ini?'\nSupported keyword: hari ini, besok, kemarin, lusa, lusa kemarin, x hari lagi, x hari lalu, minggu depan, minggu lalu\n\nCek ultah dalam range: 'bot, cek ultah x hari lagi'\nSupported Keyword: x hari lagi, x hari lalu\n\nSearch by nama panggilan: 'bot, bagi data dengan nama xxx' atau 'bagi data dengan nama xxx dong bot'\n\nKalau mau meme: 'bot, bagi meme dong' atau 'bagi meme ya bot'\n\nKalau mau dad jokes: 'bot, bagi jokes bapak2' atau 'bagi jokes bapak bapak dong bot'\n\nHal-hal umum seperti: 'hai bot', 'gws bot', 'thank you bot' juga akan gue balas\n\nKalau mau tanya siapa: 'bot siapa jodoh gue?' atau 'siapa jodoh kosar bot?'\n\nTanya pendapat ke bot: 'bot, apakah ...'\n\nButuh quote? 'bot, bagi quote dong'\n\nKalau mau this/that? 'bot pilih ... atau ... (atau ...)'\n\nMinta bot ngerating: 'bot, kasih rating buat ... dong'\n\nKalau mau generate random number: 'dari ... sampai ... berapa ...'\n\nDeskripsi random: 'bot, deskripsikan ...'\n\nMinta pendapat: 'bot, apa pendapat bot tentang ...?")
         elif text_contains(msg, ['bagi', 'meme'], max_len=100):
             payload = self.memeService.reply()
             #foundNumber = False
@@ -102,6 +102,25 @@ class KinshipBot:
                     payload = self.spreadsheetService.getPhotoByNIM(nim)
             except ValueError:
                 payload = ("Nothing",)
+        elif text_contains(msg, ['cek', 'ultah']) or text_contains(msg, ['check', 'ultah']):
+            if text_contains(msg, ['hari', 'lalu']):
+                splitMsg = msgSplit.copy()
+                try:
+                    idx = splitMsg.index("hari")
+                    if (idx >= 1):
+                        hari = int(splitMsg[idx-1])
+                        payload = self.spreadsheetService.replyUltahInRange(hari * -1)
+                except ValueError:
+                    payload = ("Nothing",)
+            elif text_contains(msg, ['hari', 'lagi']):
+                splitMsg = msgSplit.copy()
+                try:
+                    idx = splitMsg.index("hari")
+                    if (idx >= 1):
+                        hari = int(splitMsg[idx-1])
+                        payload = self.spreadsheetService.replyUltahInRange(hari)
+                except ValueError:
+                    payload = ("Nothing",)
         elif text_contains(msg, ['siapa', 'ultah']):
             #self.reply(event, ("Text", [self.message.FindWait()]))
             if text_contains(msg, ['besok']):
