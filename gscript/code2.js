@@ -25,6 +25,8 @@ function doGet(e) {
         result = getByNIM(param.nim, target);
     } else if (action == "getByPanggilan") {
         result = getByPanggilan(param.panggilan, target);
+    } else if (action == "getByDateInRange") {
+        result = getByDateInRange(param.delta, target);
     }
 
     return ContentService.createTextOutput(JSON.stringify(result)).setMimeType(
@@ -87,6 +89,31 @@ function fetchData(target) {
         data = getDataFromSheet(target);
     }
     return data;
+}
+
+function getByDateInRange(delta, target) {
+    var d;
+    if (delta) {
+        d = parseInt(delta);
+    } else {
+        d = 0;
+    }
+
+    var data = fetchData(target);
+    const result = [];
+    const filtered = filterByDateInRange(data, d);
+    filtered.Data.forEach((i) => {
+        result.push({
+            Nama: i.Nama,
+            NIM: i.NIM,
+            Panggilan: i.Panggilan,
+            Ultah: i["Ultah"].getDate() + " " + MONTHS_NAME[i["Ultah"].getMonth()],
+        });
+    });
+    return {
+        Result: result,
+        Date: filtered.Lesser + " - " + filtered.Bigger,
+    };
 }
 
 function getByDate(delta, target) {
@@ -160,6 +187,24 @@ function filterByDate(data, filterDate) {
             item["Ultah"].getMonth() == filterDate.getMonth() &&
             item["Ultah"].getDate() == filterDate.getDate()
     );
+}
+
+function filterByDateInRange(data, delta) {
+    var b = new Date();
+    var l = new Date();
+    if (delta < 0) {
+        l.setDate(l.getDate() + delta);
+    } else if (delta > 0) {
+        b.setDate(b.getDate() + delta);
+    }
+    return {
+        Data: data.filter((item) => {
+            item["Ultah"].setFullYear(l.getFullYear());
+            return item["Ultah"].getTime() >= l.getTime() && item["Ultah"].getTime() <= b.getTime();
+        }),
+        Bigger: b.getDate() + " " + MONTHS_NAME[b.getMonth()],
+        Lesser: l.getDate() + " " + MONTHS_NAME[l.getMonth()],
+    };
 }
 
 function filterByNIM(data, nim) {
