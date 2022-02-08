@@ -194,18 +194,16 @@ class Message:
             'tata', 'aras', 'hanif',
             'kosar', 'dims', 'tugus',
             'fauzan', 'ilman', 'wildan',
-            'gibet', 'gea',
+            'gibet', 'gea', 'fajri', 'fay',
+            'dhika', 'dias', 'made',
+            'hambin', 'fajar',
             'nicho', 'rakha', 'redi',
             'jek', 'shifa', 'adila',
             'tata', 'aras', 'hanif',
             'kosar', 'dims', 'tugus',
             'fauzan', 'ilman', 'wildan',
-            'gibet', 'gea',
-            'nicho', 'rakha', 'redi',
-            'jek', 'shifa', 'adila',
-            'tata', 'aras', 'hanif',
-            'kosar', 'dims', 'tugus',
-            'fauzan', 'ilman', 'wildan',
-            'gibet', 'gea'
+            'gibet', 'gea', 'fajri', 'fay',
+            'dhika', 'dias', 'made',
+            'hambin', 'fajar'
         ]
         return self.randomize(name)
