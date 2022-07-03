@@ -64,15 +64,17 @@ class ImageService:
 
         text = nim + "   " + name
         fontSize = 35
-        dy = 0
-        ssp = ImageFont.truetype("./font/SourceSansPro.ttf", fontSize)
+        dy = 18
+        ssp = ImageFont.truetype(
+            "./font/SourceSansPro-Bold.ttf", fontSize)
         textLength = ssp.getsize(text)[0]
-        while (textLength > 550):
+        while (textLength > 640):
             fontSize -= 1
             dy += 0.5
-            ssp = ImageFont.truetype("./font/SourceSansPro.ttf", fontSize)
+            ssp = ImageFont.truetype(
+                "./font/SourceSansPro-Bold.ttf", fontSize)
             textLength = ssp.getsize(text)[0]
-        draw.text((121, 660+int(dy)), text, fill="black", font=ssp)
+        draw.text((30, 660+int(dy)), text, fill="black", font=ssp)
         return canvas
 
     def save(self, photo: Image, filename: str):
