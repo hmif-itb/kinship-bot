@@ -46,15 +46,15 @@ class SpreadsheetService:
         result = data[1]
         if (len(result['Result']) == 0):
             return ("ReplyText", self.message.NoBirthday())
-        
+
         dateToName = dict()
         for i in result['Result']:
             if (i['Ultah'] in dateToName.keys()):
-                dateToName[i['Ultah']] += "\n{} - {} ({})".format(
-                    i['NIM'], i['Nama'], i['Panggilan'])
+                dateToName[i['Ultah']] += "\n{} - {} ({}) {}".format(
+                    i['NIM'], i['Nama'], i['Panggilan'], self.checkIfDeAndReturnFormat(i['DE']))
             else:
-                dateToName[i['Ultah']] = "{}\n{} - {} ({})".format(
-                    i['Ultah'], i['NIM'], i['Nama'], i['Panggilan'])
+                dateToName[i['Ultah']] = "{}\n{} - {} ({}) {}".format(
+                    i['Ultah'], i['NIM'], i['Nama'], i['Panggilan'], self.checkIfDeAndReturnFormat(i['DE']))
 
         msg = "Data ultah untuk '{}'\n".format(result['Date'])
         i = 0
@@ -108,7 +108,8 @@ class SpreadsheetService:
         for o in orang["Result"]:
             if (i > 0):
                 text += "\n"
-            text += "{} - {}".format(o["NIM"], o["Nama"])
+            text += "{} - {} {}".format(o["NIM"], o["Nama"],
+                                        self.checkIfDeAndReturnFormat(o['DE']))
             i += 1
         return ("ReplyText", text)
 
@@ -130,11 +131,11 @@ class SpreadsheetService:
         dateToName = dict()
         for i in result['Result']:
             if (i['Ultah'] in dateToName.keys()):
-                dateToName[i['Ultah']] += "\n{} - {} ({})".format(
-                    i['NIM'], i['Nama'], i['Panggilan'])
+                dateToName[i['Ultah']] += "\n{} - {} ({}) {}".format(
+                    i['NIM'], i['Nama'], i['Panggilan'], self.checkIfDeAndReturnFormat(i['DE']))
             else:
-                dateToName[i['Ultah']] = "{}\n{} - {} ({})".format(
-                    i['Ultah'], i['NIM'], i['Nama'], i['Panggilan'])
+                dateToName[i['Ultah']] = "{}\n{} - {} ({}) {}".format(
+                    i['Ultah'], i['NIM'], i['Nama'], i['Panggilan'], self.checkIfDeAndReturnFormat(i['DE']))
 
         msg = "Data nama panggilan '{}'\n".format(panggilan)
         i = 0
@@ -146,3 +147,8 @@ class SpreadsheetService:
         if (len(msg) >= 5000):
             return ("ReplyText", "Nama panggilan yang ditulis terlalu general, tidak bisa mengirim pesan karena limit 5000 karakter dari LINE")
         return ("ReplyText", msg)
+
+    def checkIfDeAndReturnFormat(self, isDE):
+        if isDE:
+            return "[DE NICH]"
+        return ""
