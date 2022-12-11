@@ -1,15 +1,13 @@
-FROM python:3.10.5-alpine3.16
+FROM python:3.7.16-slim-bullseye
 
 ARG user=hmif
-
-RUN apk add --no-cache libjpeg-turbo-dev zlib-dev
 
 # as root
 WORKDIR /app
 COPY . .
 RUN pip install -r requirements.txt
-RUN addgroup --gid 1001 -S ${user} && \
-    adduser -G ${user} --disabled-password --uid 1001 ${user} && \
+RUN groupadd --gid 1001 ${user} && \
+    useradd -g ${user} --uid 1001 -M ${user} && \
     mkdir -p /var/log/${user} && \
     chown ${user}:${user} /var/log/${user}
 USER ${user}
