@@ -2,6 +2,8 @@ FROM python:3.10.5-alpine3.16
 
 ARG user=hmif
 
+RUN apk add --no-cache libjpeg-turbo-dev zlib-dev
+
 # as root
 WORKDIR /app
 COPY . .
