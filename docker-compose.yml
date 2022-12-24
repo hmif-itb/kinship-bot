@@ -1,0 +1,8 @@
+version: "3.9"
+services:
+  kinship-bot:
+    container_name: kinship-bot-update
+    build: .
+    env_file: .env
+    ports:
+      - "8001:8001"
